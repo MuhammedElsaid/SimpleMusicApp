@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         showSongFragmentButton = findViewById(R.id.showSongsButton);
         backButton = findViewById(R.id.backButton);
 
