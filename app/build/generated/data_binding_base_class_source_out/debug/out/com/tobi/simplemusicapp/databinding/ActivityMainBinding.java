@@ -4,7 +4,6 @@ package com.tobi.simplemusicapp.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsoluteLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -27,7 +26,7 @@ public final class ActivityMainBinding implements ViewBinding {
   public final FloatingActionButton backButton;
 
   @NonNull
-  public final ConstraintLayout constraintLayout;
+  public final ConstraintLayout constraintLayout4;
 
   @NonNull
   public final TextView currentPosText;
@@ -36,7 +35,7 @@ public final class ActivityMainBinding implements ViewBinding {
   public final TextView durationText;
 
   @NonNull
-  public final AbsoluteLayout fragmentHolder;
+  public final LinearLayout fragmentHolder;
 
   @NonNull
   public final LinearLayout linearLayout;
@@ -60,16 +59,16 @@ public final class ActivityMainBinding implements ViewBinding {
   public final Slider timelineSlider;
 
   private ActivityMainBinding(@NonNull ConstraintLayout rootView,
-      @NonNull FloatingActionButton backButton, @NonNull ConstraintLayout constraintLayout,
+      @NonNull FloatingActionButton backButton, @NonNull ConstraintLayout constraintLayout4,
       @NonNull TextView currentPosText, @NonNull TextView durationText,
-      @NonNull AbsoluteLayout fragmentHolder, @NonNull LinearLayout linearLayout,
+      @NonNull LinearLayout fragmentHolder, @NonNull LinearLayout linearLayout,
       @NonNull FloatingActionButton nextSongButton, @NonNull FloatingActionButton playButton,
       @NonNull FloatingActionButton prevSongButton,
       @NonNull FloatingActionButton showPlaylistButton,
       @NonNull FloatingActionButton showSongsButton, @NonNull Slider timelineSlider) {
     this.rootView = rootView;
     this.backButton = backButton;
-    this.constraintLayout = constraintLayout;
+    this.constraintLayout4 = constraintLayout4;
     this.currentPosText = currentPosText;
     this.durationText = durationText;
     this.fragmentHolder = fragmentHolder;
@@ -115,9 +114,9 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.constraintLayout;
-      ConstraintLayout constraintLayout = ViewBindings.findChildViewById(rootView, id);
-      if (constraintLayout == null) {
+      id = R.id.constraintLayout4;
+      ConstraintLayout constraintLayout4 = ViewBindings.findChildViewById(rootView, id);
+      if (constraintLayout4 == null) {
         break missingId;
       }
 
@@ -134,7 +133,7 @@ public final class ActivityMainBinding implements ViewBinding {
       }
 
       id = R.id.fragmentHolder;
-      AbsoluteLayout fragmentHolder = ViewBindings.findChildViewById(rootView, id);
+      LinearLayout fragmentHolder = ViewBindings.findChildViewById(rootView, id);
       if (fragmentHolder == null) {
         break missingId;
       }
@@ -181,7 +180,7 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((ConstraintLayout) rootView, backButton, constraintLayout,
+      return new ActivityMainBinding((ConstraintLayout) rootView, backButton, constraintLayout4,
           currentPosText, durationText, fragmentHolder, linearLayout, nextSongButton, playButton,
           prevSongButton, showPlaylistButton, showSongsButton, timelineSlider);
     }

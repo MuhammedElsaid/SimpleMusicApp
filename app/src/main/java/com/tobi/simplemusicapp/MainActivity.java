@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton showPlaylistButton = findViewById(R.id.showPlaylistButton);
 
-        AbsoluteLayout mainLayout = findViewById(R.id.fragmentHolder);
+        LinearLayout mainLayout = findViewById(R.id.fragmentHolder);
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if(songFragmentView == null)
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void ShowFragment(View view, AbsoluteLayout layout){
+    public void ShowFragment(View view, LinearLayout layout){
 
         if(view != songFragmentView){
             showSongFragmentButton.setVisibility(View.INVISIBLE);
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         layout.removeView(layout.getChildAt((0)));
         layout.addView(view, 0);
 
-        layout.animate().setDuration(300).translationY(50);
+        layout.animate().setDuration(250).translationY(0);
     }
 
     @Override

@@ -153,11 +153,12 @@ drawable ic_baseline_dehaze_24
 drawable ic_baseline_playlist_play_24
 drawable ic_launcher_background
 drawable ic_launcher_foreground
+drawable ic_queue_music
 drawable rounded_corner_linear_layout
 drawable rounded_layout_shape
 id action_settings
 id backButton
-id constraintLayout
+id constraintLayout4
 id currentPosText
 id durationText
 id floatingActionButton

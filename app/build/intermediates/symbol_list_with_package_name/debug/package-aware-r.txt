@@ -1877,6 +1877,7 @@ drawable ic_mtrl_checked_circle
 drawable ic_mtrl_chip_checked_black
 drawable ic_mtrl_chip_checked_circle
 drawable ic_mtrl_chip_close_circle
+drawable ic_queue_music
 drawable material_cursor_drawable
 drawable material_ic_calendar_black_24dp
 drawable material_ic_clear_black_24dp
@@ -2028,7 +2029,7 @@ id clip_vertical
 id clockwise
 id collapseActionView
 id confirm_button
-id constraintLayout
+id constraintLayout4
 id container
 id content
 id contentPanel
