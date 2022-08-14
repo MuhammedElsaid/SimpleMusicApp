@@ -163,6 +163,7 @@ id currentPosText
 id durationText
 id floatingActionButton
 id fragmentHolder
+id icon
 id linearLayout
 id nav_host_fragment_content_main
 id nextSongButton
@@ -172,12 +173,15 @@ id prevSongButton
 id showPlaylistButton
 id showSongsButton
 id songsList
+id subtitle
 id textView
 id timelineSlider
+id title
 layout activity_main
 layout content_main
 layout fragment_playlist_lists
 layout playlist_fragment
+layout playlist_listview
 layout songcover_fragment
 menu menu_main
 mipmap ic_launcher

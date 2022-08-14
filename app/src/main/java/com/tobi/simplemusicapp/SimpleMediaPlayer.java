@@ -1,14 +1,23 @@
 package com.tobi.simplemusicapp;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.util.Size;
+import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -18,6 +27,8 @@ public class SimpleMediaPlayer {
 
     private MediaPlayer mediaPlayer;
     private Activity activity;
+
+    private static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 41;
 
     public SimpleMediaPlayer(Activity activity) {
         this.mediaPlayer = new MediaPlayer();
@@ -67,28 +78,47 @@ public class SimpleMediaPlayer {
         return mediaPlayer;
     }
 
-    ArrayList<Song> getAllSongs(Activity activity){
+    public boolean checkPermissionForReadExtertalStorage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int result = activity.getApplicationContext().checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE);
+            return result == PackageManager.PERMISSION_GRANTED;
+        }
+        return false;
+    }
+
+    ArrayList<Song> getAllSongs(){
+
+        if(!checkPermissionForReadExtertalStorage()){
+            try {
+                ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                        READ_STORAGE_PERMISSION_REQUEST_CODE);
+            } catch (Exception e) {
+                Toast.makeText(activity.getApplicationContext(),
+                        "Permission to read external storage has been denied", Toast.LENGTH_SHORT).show();
+            }
+        }
 
         ArrayList<Song> foundSongs = new ArrayList<>();
 
         ContentResolver contentResolve = activity.getContentResolver();
-        Cursor cursor = contentResolve.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = {
+                MediaStore.Audio.AudioColumns.TITLE,
+                MediaStore.Audio.AudioColumns.ARTIST,
+                MediaStore.Audio.AudioColumns.DATA,
+                MediaStore.Images.ImageColumns._ID
+        };
+        Cursor cursor = contentResolve.query(uri, projection, null, null, null);
 
         if(cursor != null && cursor.moveToFirst()){
 
-            int titleId = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
-            int artistId = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
-            int albumId = cursor.getColumnIndex(android.provider.MediaStore.Audio.Albums.ALBUM_ART);
-            int pathId = cursor .getColumnIndex(MediaStore.Audio.Media.DATA);
-
             do {
-                String title = cursor.getString(titleId);
-                String artistName = cursor.getString(artistId);
-                String albumString = cursor.getString(albumId);
-                String path = cursor.getString(pathId);
+                String title = cursor.getString(0);
+                String artistName = cursor.getString(1);
+                String path = cursor.getString(2);
+                int imageId = cursor.getInt(3);
 
-                foundSongs.add(new Song(path, title, artistName, albumString));
-                //Bitmap albumArtBitmap = BitmapFactory.decodeFile();
+                foundSongs.add(new Song(path, title, artistName, imageId));
             }
             while(cursor.moveToNext());
         }

@@ -2,6 +2,9 @@ package com.tobi.simplemusicapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -9,9 +12,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -25,6 +30,8 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     private View songFragmentView;
     private View songListFragmentView;
@@ -32,10 +39,16 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        SimpleMediaPlayer simpleMediaPlayer = new SimpleMediaPlayer(this);
+        //ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 41);
+        ArrayList<Song> songs = simpleMediaPlayer.getAllSongs();
+
+        Bitmap bitmap =  songs.get(0).getAlbumArt();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -52,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
                 binding.durationText.setText(Float.toString(slider.getValue()));
             }
         });
-
 
         LinearLayout mainLayout = binding.fragmentHolder;
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);

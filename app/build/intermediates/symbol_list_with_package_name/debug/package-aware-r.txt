@@ -2291,6 +2291,7 @@ id stop
 id stretch
 id submenuarrow
 id submit_area
+id subtitle
 id tabMode
 id tag_accessibility_actions
 id tag_accessibility_clickable_spans
@@ -2496,6 +2497,7 @@ layout notification_template_icon_group
 layout notification_template_part_chronometer
 layout notification_template_part_time
 layout playlist_fragment
+layout playlist_listview
 layout select_dialog_item_material
 layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
