@@ -177,8 +177,8 @@ id timelineSlider
 layout activity_main
 layout content_main
 layout fragment_playlist_lists
-layout fragment_second
 layout playlist_fragment
+layout songcover_fragment
 menu menu_main
 mipmap ic_launcher
 mipmap ic_launcher_round

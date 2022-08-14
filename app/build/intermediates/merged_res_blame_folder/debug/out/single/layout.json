@@ -8,8 +8,8 @@
         "source": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-main-26:\\layout\\content_main.xml"
     },
     {
-        "merged": "com.tobi.simplemusicapp-mergeDebugResources-23:/layout/playlist_fragment.xml",
-        "source": "com.tobi.simplemusicapp-main-26:/layout/playlist_fragment.xml"
+        "merged": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-mergeDebugResources-23:\\layout\\playlist_fragment.xml",
+        "source": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-main-26:\\layout\\playlist_fragment.xml"
     },
     {
         "merged": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-mergeDebugResources-23:\\layout\\activity_main.xml",
@@ -18,6 +18,10 @@
     {
         "merged": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-mergeDebugResources-23:\\layout\\fragment_first.xml",
         "source": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-main-26:\\layout\\fragment_first.xml"
+    },
+    {
+        "merged": "com.tobi.simplemusicapp-mergeDebugResources-23:/layout/songcover_fragment.xml",
+        "source": "com.tobi.simplemusicapp-main-26:/layout/songcover_fragment.xml"
     },
     {
         "merged": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-mergeDebugResources-23:\\layout\\fragment_second.xml",

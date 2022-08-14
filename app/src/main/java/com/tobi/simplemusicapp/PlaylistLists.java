@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tobi.simplemusicapp.databinding.FragmentSecondBinding;
+import com.tobi.simplemusicapp.databinding.PlaylistFragmentBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,7 +17,7 @@ import com.tobi.simplemusicapp.databinding.FragmentSecondBinding;
  */
 public class PlaylistLists extends Fragment {
 
-    private FragmentSecondBinding binding;
+    private PlaylistFragmentBinding binding;
 
     @Override
     public View onCreateView(
@@ -25,7 +25,7 @@ public class PlaylistLists extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentSecondBinding.inflate(inflater, container, false);
+        binding = PlaylistFragmentBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }

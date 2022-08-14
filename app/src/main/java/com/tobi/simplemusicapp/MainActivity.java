@@ -30,10 +30,6 @@ public class MainActivity extends AppCompatActivity {
     private View songListFragmentView;
     private View playlistListsFragmentView;
 
-    FloatingActionButton showSongFragmentButton;
-    FloatingActionButton backButton;
-
-    private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
     @Override
@@ -43,10 +39,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Slider timelineSlider = findViewById(R.id.timelineSlider);
-        TextView currentDurationText = findViewById(R.id.durationText);
-
-        timelineSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
+        binding.timelineSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @SuppressLint("RestrictedApi")
             @Override
             public void onStartTrackingTouch(@NonNull Slider slider) {
@@ -56,18 +49,12 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("RestrictedApi")
             @Override
             public void onStopTrackingTouch(@NonNull Slider slider) {
-                currentDurationText.setText(Float.toString(slider.getValue()));
+                binding.durationText.setText(Float.toString(slider.getValue()));
             }
         });
 
 
-
-        showSongFragmentButton = findViewById(R.id.showSongsButton);
-        backButton = findViewById(R.id.backButton);
-
-        FloatingActionButton showPlaylistButton = findViewById(R.id.showPlaylistButton);
-
-        LinearLayout mainLayout = findViewById(R.id.fragmentHolder);
+        LinearLayout mainLayout = binding.fragmentHolder;
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if(songFragmentView == null)
@@ -75,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         ShowFragment(songFragmentView, mainLayout);
 
-        showPlaylistButton.setOnClickListener(new View.OnClickListener() {
+        binding.showPlaylistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -83,11 +70,10 @@ public class MainActivity extends AppCompatActivity {
                     playlistListsFragmentView = inflater.inflate(R.layout.fragment_playlist_lists, mainLayout, false);
 
                 ShowFragment(playlistListsFragmentView, mainLayout);
-
             }
         });
 
-        showSongFragmentButton.setOnClickListener(new View.OnClickListener() {
+        binding.showSongsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -95,11 +81,10 @@ public class MainActivity extends AppCompatActivity {
                     songListFragmentView = inflater.inflate(R.layout.playlist_fragment, mainLayout, false);
 
                 ShowFragment(songListFragmentView, mainLayout);
-
             }
         });
 
-        backButton.setOnClickListener(new View.OnClickListener() {
+        binding.backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -110,51 +95,26 @@ public class MainActivity extends AppCompatActivity {
 
     public void ShowFragment(View view, LinearLayout layout){
 
+        //Changing the visibility of the toggle button
         if(view != songFragmentView){
-            showSongFragmentButton.setVisibility(View.INVISIBLE);
-            backButton.setVisibility(View.VISIBLE);
+            binding.showSongsButton.setVisibility(View.INVISIBLE);
+            binding.backButton.setVisibility(View.VISIBLE);
         }
         else{
-            showSongFragmentButton.setVisibility(View.VISIBLE);
-            backButton.setVisibility(View.INVISIBLE);
+            binding.showSongsButton.setVisibility(View.VISIBLE);
+            binding.backButton.setVisibility(View.INVISIBLE);
         }
 
         layout.setVisibility(View.INVISIBLE);
+        //Not the best way
         layout.setTranslationY(520);
         layout.setVisibility(View.VISIBLE);
 
+        //Removing the old view
         layout.removeView(layout.getChildAt((0)));
         layout.addView(view, 0);
 
+        //Animating the popup
         layout.animate().setDuration(250).translationY(0);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
     }
 }
