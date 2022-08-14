@@ -2,7 +2,6 @@ package com.tobi.simplemusicapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Rect;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -10,15 +9,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.transition.Scene;
-import android.transition.Visibility;
-import android.util.DisplayMetrics;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -29,15 +22,7 @@ import com.tobi.simplemusicapp.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.view.ViewStub;
-import android.view.WindowMetrics;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.AbsoluteLayout;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -86,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if(songFragmentView == null)
-            songFragmentView = inflater.inflate(R.layout.fragment_second, mainLayout, false);
+            songFragmentView = inflater.inflate(R.layout.songcover_fragment, mainLayout, false);
 
         ShowFragment(songFragmentView, mainLayout);
 
@@ -107,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 if(songListFragmentView == null)
-                    songListFragmentView = inflater.inflate(R.layout.fragment_first, mainLayout, false);
+                    songListFragmentView = inflater.inflate(R.layout.playlist_fragment, mainLayout, false);
 
                 ShowFragment(songListFragmentView, mainLayout);
 

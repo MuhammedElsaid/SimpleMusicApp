@@ -8,12 +8,12 @@
         "source": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-main-26:\\layout\\fragment_first.xml"
     },
     {
-        "merged": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-merged_res-24:\\xml_backup_rules.xml.flat",
-        "source": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-main-26:\\xml\\backup_rules.xml"
-    },
-    {
         "merged": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-merged_res-24:\\drawable_rounded_corner_linear_layout.xml.flat",
         "source": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-main-26:\\drawable\\rounded_corner_linear_layout.xml"
+    },
+    {
+        "merged": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-merged_res-24:\\xml_backup_rules.xml.flat",
+        "source": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-main-26:\\xml\\backup_rules.xml"
     },
     {
         "merged": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-merged_res-24:\\mipmap-xxxhdpi_ic_launcher_round.webp.flat",
@@ -56,10 +56,6 @@
         "source": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-main-26:\\drawable\\ic_baseline_dehaze_24.xml"
     },
     {
-        "merged": "com.tobi.simplemusicapp-merged_res-24:/layout_fragment_playlist_lists.xml.flat",
-        "source": "com.tobi.simplemusicapp-main-26:/layout/fragment_playlist_lists.xml"
-    },
-    {
         "merged": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-merged_res-24:\\drawable_rounded_layout_shape.xml.flat",
         "source": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-main-26:\\drawable\\rounded_layout_shape.xml"
     },
@@ -82,10 +78,6 @@
     {
         "merged": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-merged_res-24:\\drawable_ic_baseline_playlist_play_24.xml.flat",
         "source": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-main-26:\\drawable\\ic_baseline_playlist_play_24.xml"
-    },
-    {
-        "merged": "com.tobi.simplemusicapp-merged_res-24:/layout_fragment_first.xml.flat",
-        "source": "com.tobi.simplemusicapp-main-26:/layout/fragment_first.xml"
     },
     {
         "merged": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-merged_res-24:\\layout_fragment_second.xml.flat",
@@ -126,5 +118,9 @@
     {
         "merged": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-merged_res-24:\\xml_data_extraction_rules.xml.flat",
         "source": "C:\\Users\\Tobi\\.gradle\\daemon\\7.3.3\\com.tobi.simplemusicapp-main-26:\\xml\\data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.tobi.simplemusicapp-merged_res-24:/layout_playlist_fragment.xml.flat",
+        "source": "com.tobi.simplemusicapp-main-26:/layout/playlist_fragment.xml"
     }
 ]
