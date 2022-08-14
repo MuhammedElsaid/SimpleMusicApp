@@ -3105,6 +3105,7 @@ style Theme_MaterialComponents_NoActionBar
 style Theme_MaterialComponents_NoActionBar_Bridge
 style Theme_SimpleMusicApp
 style Theme_SimpleMusicApp_AppBarOverlay
+style Theme_SimpleMusicApp_Light
 style Theme_SimpleMusicApp_NoActionBar
 style Theme_SimpleMusicApp_PopupOverlay
 style ThemeOverlay_AppCompat

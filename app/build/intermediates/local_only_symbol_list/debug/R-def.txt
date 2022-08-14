@@ -197,6 +197,7 @@ string previous
 string second_fragment_label
 style Theme.SimpleMusicApp
 style Theme.SimpleMusicApp.AppBarOverlay
+style Theme.SimpleMusicApp.Light
 style Theme.SimpleMusicApp.NoActionBar
 style Theme.SimpleMusicApp.PopupOverlay
 xml backup_rules

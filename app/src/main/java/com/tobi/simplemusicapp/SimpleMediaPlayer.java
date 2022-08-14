@@ -5,15 +5,19 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.util.Size;
 import android.widget.Toast;
 
@@ -65,11 +69,19 @@ public class SimpleMediaPlayer {
 
         try
         {
-            mediaPlayer.setDataSource(activity.getApplicationContext(), Uri.parse(song.getPath()));
-            mediaPlayer.prepare();
-            mediaPlayer.start();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setDataSource(activity.getApplicationContext(), song.getPath());
+            mediaPlayer.prepareAsync();
+
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    mediaPlayer.start();
+                }
+            });
 
         } catch (IOException exception){
+            exception.printStackTrace();
             //TODO:: handle exception
         }
     }
@@ -78,7 +90,7 @@ public class SimpleMediaPlayer {
         return mediaPlayer;
     }
 
-    public boolean checkPermissionForReadExtertalStorage() {
+    public boolean checkPermissionForReadExternalStorage() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int result = activity.getApplicationContext().checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE);
             return result == PackageManager.PERMISSION_GRANTED;
@@ -86,15 +98,27 @@ public class SimpleMediaPlayer {
         return false;
     }
 
+    private void showPermissionDenied(){
+
+        Toast.makeText(activity.getApplicationContext(),
+                "Permission to read external storage has been denied", Toast.LENGTH_SHORT).show();
+    }
+
     ArrayList<Song> getAllSongs(){
 
-        if(!checkPermissionForReadExtertalStorage()){
+        if(!checkPermissionForReadExternalStorage()){
             try {
                 ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
                         READ_STORAGE_PERMISSION_REQUEST_CODE);
+
+                if(!checkPermissionForReadExternalStorage()){
+                    showPermissionDenied();
+                    return null;
+                }
+
             } catch (Exception e) {
-                Toast.makeText(activity.getApplicationContext(),
-                        "Permission to read external storage has been denied", Toast.LENGTH_SHORT).show();
+                showPermissionDenied();
+                return null;
             }
         }
 
@@ -105,9 +129,10 @@ public class SimpleMediaPlayer {
         String[] projection = {
                 MediaStore.Audio.AudioColumns.TITLE,
                 MediaStore.Audio.AudioColumns.ARTIST,
-                MediaStore.Audio.AudioColumns.DATA,
+                MediaStore.Audio.AudioColumns._ID,
                 MediaStore.Images.ImageColumns._ID
         };
+
         Cursor cursor = contentResolve.query(uri, projection, null, null, null);
 
         if(cursor != null && cursor.moveToFirst()){
@@ -115,10 +140,10 @@ public class SimpleMediaPlayer {
             do {
                 String title = cursor.getString(0);
                 String artistName = cursor.getString(1);
-                String path = cursor.getString(2);
+                int id = cursor.getInt(2);
                 int imageId = cursor.getInt(3);
 
-                foundSongs.add(new Song(path, title, artistName, imageId));
+                foundSongs.add(new Song(id, title, artistName, imageId));
             }
             while(cursor.moveToNext());
         }

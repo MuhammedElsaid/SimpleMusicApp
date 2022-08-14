@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class Song {
 
-    private String path;
+    public int id;
     private String title;
     private String artist;
     private int albumArtId;
@@ -24,8 +24,8 @@ public class Song {
         return albumArtId;
     }
 
-    public String getPath() {
-        return path;
+    public Uri getPath() {
+        return ContentUris.withAppendedId(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id);
     }
 
     public String getTitle() {
@@ -34,15 +34,6 @@ public class Song {
 
     public String getArtist() {
         return artist;
-    }
-
-    public Bitmap getAlbumArt() {
-
-        return null;
-        //MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        //mmr.setDataSource(path);
-        //byte [] data = mmr.getEmbeddedPicture();
-        //return BitmapFactory.decodeByteArray(data, 0, data.length);
     }
 
     Bitmap getAlbumArt(ContentResolver contentResolver){
@@ -57,8 +48,8 @@ public class Song {
         }
     }
 
-    public Song(String path, String title, String artist, int albumArtId) {
-        this.path = path;
+    public Song(int id, String title, String artist, int albumArtId) {
+        this.id = id;
         this.title = title;
         this.artist = artist;
         this.albumArtId = albumArtId;
