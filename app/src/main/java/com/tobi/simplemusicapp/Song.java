@@ -16,6 +16,7 @@ import java.io.IOException;
 public class Song {
 
     public int id;
+    private int duration;
     private String title;
     private String artist;
     private int albumArtId;
@@ -48,10 +49,11 @@ public class Song {
         }
     }
 
-    public Song(int id, String title, String artist, int albumArtId) {
+    public Song(int id, String title, String artist, int duration, int albumArtId) {
         this.id = id;
         this.title = title;
         this.artist = artist;
+        this.duration = duration;
         this.albumArtId = albumArtId;
     }
 }

@@ -104,6 +104,28 @@ public class SimpleMediaPlayer {
                 "Permission to read external storage has been denied", Toast.LENGTH_SHORT).show();
     }
 
+    Song getSongFromId(int songID){
+
+        Cursor cursor = activity.getApplicationContext().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                new String[] {
+                        MediaStore.Audio.AudioColumns.TITLE,
+                        MediaStore.Audio.AudioColumns.ARTIST,
+                        MediaStore.Audio.AudioColumns.DURATION,
+                        MediaStore.Images.ImageColumns._ID
+                },
+                MediaStore.Audio.AudioColumns._ID + "=?",
+                new String[] { String.valueOf(songID)  }, null);
+
+        if(cursor!=null && cursor.moveToFirst())
+            return new Song(songID,
+                    cursor.getString(0),
+                    cursor.getString(1),
+                    cursor.getInt(2),
+                    cursor.getInt(3));
+
+        return null;
+    }
+
     ArrayList<Song> getAllSongs(){
 
         if(!checkPermissionForReadExternalStorage()){
@@ -127,23 +149,26 @@ public class SimpleMediaPlayer {
         ContentResolver contentResolve = activity.getContentResolver();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {
+                MediaStore.Audio.AudioColumns._ID,
                 MediaStore.Audio.AudioColumns.TITLE,
                 MediaStore.Audio.AudioColumns.ARTIST,
-                MediaStore.Audio.AudioColumns._ID,
+                MediaStore.Audio.AudioColumns.DURATION,
                 MediaStore.Images.ImageColumns._ID
         };
 
-        Cursor cursor = contentResolve.query(uri, projection, null, null, null);
+        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+
+        Cursor cursor = contentResolve.query(uri, projection, selection, null, null);
 
         if(cursor != null && cursor.moveToFirst()){
 
             do {
-                String title = cursor.getString(0);
-                String artistName = cursor.getString(1);
-                int id = cursor.getInt(2);
-                int imageId = cursor.getInt(3);
 
-                foundSongs.add(new Song(id, title, artistName, imageId));
+                foundSongs.add(new Song(cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getInt(3),
+                        cursor.getInt(4)));
             }
             while(cursor.moveToNext());
         }

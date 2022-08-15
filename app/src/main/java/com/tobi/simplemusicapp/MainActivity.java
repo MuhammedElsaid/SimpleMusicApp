@@ -1,45 +1,23 @@
 package com.tobi.simplemusicapp;
 
 import android.annotation.SuppressLint;
-import android.app.Service;
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.IBinder;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
-
-import androidx.core.app.ActivityCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.slider.Slider;
 import com.tobi.simplemusicapp.databinding.ActivityMainBinding;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,31 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
     SimpleMediaPlayer simpleMediaPlayer;
 
-    private void main(){
-
-        FeedReaderDbHelper FD = new FeedReaderDbHelper(getApplicationContext(),"Ay7aga",null,1);
-        SQLiteDatabase DB= FD.getReadableDatabase();
-        FD.insertDataPlaylist("1st");
-        String[] Projection ={FeedReaderContract.FeedEntry.COLUMN_NAME_nID, FeedReaderContract.FeedEntry.COLUMN_NAME_n};
-        Cursor cursor = DB.query(
-                FeedReaderContract.FeedEntry.TABLE_NAMEn,
-                Projection,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-
-        List itemIds = new ArrayList<Integer>();
-        while(cursor.moveToNext()) {
-            long itemId = cursor.getInt(cursor.getColumnIndexOrThrow(FeedReaderContract.FeedEntry.COLUMN_NAME_nID));
-            itemIds.add(itemId);
-        }
-
-        cursor.close();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,12 +38,10 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //TODO:: temp
         simpleMediaPlayer = new SimpleMediaPlayer(this);
-        //ArrayList<Song> songs = simpleMediaPlayer.getAllSongs();
+        ArrayList<Song> songs = simpleMediaPlayer.getAllSongs();
 
-        //simpleMediaPlayer.play(songs.get(3));
-
-        main();
         binding.timelineSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @SuppressLint("RestrictedApi")
             @Override
