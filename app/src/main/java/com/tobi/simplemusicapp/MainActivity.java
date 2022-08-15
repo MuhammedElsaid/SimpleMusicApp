@@ -14,8 +14,11 @@ import android.view.View;
 
 import com.google.android.material.slider.Slider;
 import com.tobi.simplemusicapp.databinding.ActivityMainBinding;
+import com.tobi.simplemusicapp.databinding.PlaylistFragmentBinding;
 import com.tobi.simplemusicapp.databinding.SongcoverFragmentBinding;
 
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
@@ -33,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isPlaying = false;
     private Handler mHandler;
-
-
 
     private SimpleMediaPlayer simpleMediaPlayer;
 
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(currentSongIndex + 1 > songs.size())
+                if(currentSongIndex + 1 > songs.size() - 1)
                     return;
 
                 PlayNextSong(songs.get(++currentSongIndex), false);
@@ -149,8 +150,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(songListFragmentView == null)
+                if(songListFragmentView == null){
                     songListFragmentView = inflater.inflate(R.layout.playlist_fragment, mainLayout, false);
+
+                    SetAllSongsView(songs);
+                }
 
                 ShowFragment(songListFragmentView, mainLayout);
             }
@@ -197,6 +201,10 @@ public class MainActivity extends AppCompatActivity {
         ShowSongInfo(song);
         binding.timelineSlider.setValueTo(song.getDuration());
         binding.durationText.setText(formatDuration(song.getDuration()));
+
+        if(simpleMediaPlayer.getMediaPlayer().isPlaying())
+            simpleMediaPlayer.getMediaPlayer().reset();
+
         simpleMediaPlayer.play(song);
     }
 
@@ -223,6 +231,24 @@ public class MainActivity extends AppCompatActivity {
         simpleMediaPlayer.getMediaPlayer().reset();
 
         PlaySong(song);
+    }
+
+    public void SetAllSongsView(ArrayList<Song> songs){
+
+        PlaylistFragmentBinding playlistFragmentBinding = PlaylistFragmentBinding.bind(songListFragmentView);
+
+        PlaylistAdapter adapter = new PlaylistAdapter(this, songs);
+
+        playlistFragmentBinding.songsList.setAdapter(adapter);
+
+        playlistFragmentBinding.songsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                PlaySong(songs.get(i));
+            }
+        });
+
     }
 
     public void ShowFragment(View view, LinearLayout layout){
