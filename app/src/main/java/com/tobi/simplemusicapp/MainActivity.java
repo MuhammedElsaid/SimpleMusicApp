@@ -202,9 +202,7 @@ public class MainActivity extends AppCompatActivity {
         binding.timelineSlider.setValueTo(song.getDuration());
         binding.durationText.setText(formatDuration(song.getDuration()));
 
-        if(simpleMediaPlayer.getMediaPlayer().isPlaying())
-            simpleMediaPlayer.getMediaPlayer().reset();
-
+        simpleMediaPlayer.getMediaPlayer().reset();
         simpleMediaPlayer.play(song);
     }
 
