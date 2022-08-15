@@ -107,7 +107,6 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
                 MusicPlayFeedContract.MusicPlayerFeedEntry.COLUMN_PLAYLIST_NAME
         };
 
-
         Cursor cursor = db.query(
                 MusicPlayFeedContract.MusicPlayerFeedEntry.TABLE_PLAYLIST,
                 Projection,

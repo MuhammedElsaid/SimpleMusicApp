@@ -32,6 +32,12 @@ public class SimpleMediaPlayer {
     private MediaPlayer mediaPlayer;
     private Activity activity;
 
+    private Song runningSong;
+
+    public Song getRunningSong() {
+        return runningSong;
+    }
+
     private static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 41;
 
     public SimpleMediaPlayer(Activity activity) {
@@ -69,13 +75,13 @@ public class SimpleMediaPlayer {
 
         try
         {
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(activity.getApplicationContext(), song.getPath());
             mediaPlayer.prepareAsync();
 
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
+                    runningSong = song;
                     mediaPlayer.start();
                 }
             });
@@ -114,7 +120,7 @@ public class SimpleMediaPlayer {
                         MediaStore.Images.ImageColumns._ID
                 },
                 MediaStore.Audio.AudioColumns._ID + "=?",
-                new String[] { String.valueOf(songID)  }, null);
+                new String[] { String.valueOf(songID) }, null);
 
         if(cursor!=null && cursor.moveToFirst())
             return new Song(songID,

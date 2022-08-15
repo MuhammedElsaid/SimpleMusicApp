@@ -20,7 +20,6 @@ public class MusicPlayFeedContract {
 
         public static final String SQL_CREATE_ENTRIES_SONGS =
                  "CREATE TABLE " + MusicPlayerFeedEntry.TABLE_SONGS + " (" +
-                          MusicPlayerFeedEntry._ID + " INTEGER," +
                           MusicPlayerFeedEntry.COLUMN_SONGS_PLAYLIST_ID + " TEXT," +
                           MusicPlayerFeedEntry.COLUMN_SONG_ID + " TEXT)";
 

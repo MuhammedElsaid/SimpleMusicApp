@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class Song {
 
-    public int id;
+    private int id;
     private int duration;
     private String title;
     private String artist;
@@ -35,6 +35,10 @@ public class Song {
 
     public String getArtist() {
         return artist;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 
     Bitmap getAlbumArt(ContentResolver contentResolver){

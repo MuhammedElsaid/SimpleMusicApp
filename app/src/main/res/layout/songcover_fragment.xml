@@ -12,22 +12,24 @@
         android:layout_height="match_parent"
         android:layout_gravity="start|fill_vertical|fill"
         android:background="@drawable/rounded_corner_linear_layout">
+
         <TextView
+            android:id="@+id/songTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="#Song's Name"
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
+            android:text="#Song's Name"
             android:textSize="30dp" />
 
         <TextView
+            android:id="@+id/songArtist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="#Song's Artist"
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
-            android:textSize="25dp"
-            />
+            android:text="#Song's Artist"
+            android:textSize="25dp" />
 
     </LinearLayout>
 </LinearLayout>
