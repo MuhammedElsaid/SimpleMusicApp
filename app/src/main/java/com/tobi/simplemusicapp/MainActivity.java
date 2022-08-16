@@ -79,13 +79,11 @@ public class MainActivity extends AppCompatActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Pick a playlist");
-                builder.setItems(playlistNames.toArray(new String[playlistNames.size()]), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Playlist playlist = playlists.get(which);
-                        playlist.add(song);
-                        musicPlayerDBHelper.insertDataSong(String.valueOf(song.getId()), String.valueOf(playlist.getID()));
-                    }
+                builder.setItems(playlistNames.toArray(new String[playlistNames.size()]), (dialog, which) -> {
+
+                    Playlist playlist = playlists.get(which);
+                    playlist.add(song);
+                    musicPlayerDBHelper.insertDataSong(String.valueOf(song.getId()), String.valueOf(playlist.getID()));
                 });
                 builder.show();
 
@@ -202,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
             currentPlaylist =  i == 0 ? allSongsPlaylist : playlists.get(i - 1);
             SetPlaylistView(currentPlaylist);
+
             ShowFragment(songListFragmentView, mainLayout);
         });
 
