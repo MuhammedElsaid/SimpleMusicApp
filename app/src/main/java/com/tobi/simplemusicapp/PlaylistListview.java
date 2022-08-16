@@ -8,19 +8,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tobi.simplemusicapp.databinding.PlaylistFragmentBinding;
+import com.tobi.simplemusicapp.databinding.PlaylistListviewBinding;
+
 
 public class PlaylistListview extends Fragment {
 
-
-    public PlaylistListview() {
-        // Required empty public constructor
-    }
-
+    private PlaylistListviewBinding binding;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.playlist_listview, container, false);
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+
+        binding = PlaylistListviewBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

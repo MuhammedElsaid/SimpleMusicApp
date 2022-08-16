@@ -2,10 +2,12 @@ package com.tobi.simplemusicapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
@@ -14,11 +16,15 @@ import android.view.View;
 
 import com.google.android.material.slider.Slider;
 import com.tobi.simplemusicapp.databinding.ActivityMainBinding;
+import com.tobi.simplemusicapp.databinding.FragmentPlaylistListsBinding;
 import com.tobi.simplemusicapp.databinding.PlaylistFragmentBinding;
+import com.tobi.simplemusicapp.databinding.PlaylistListviewBinding;
 import com.tobi.simplemusicapp.databinding.SongcoverFragmentBinding;
 
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
@@ -132,15 +138,54 @@ public class MainActivity extends AppCompatActivity {
         if(songFragmentView == null)
             songFragmentView = inflater.inflate(R.layout.songcover_fragment, mainLayout, false);
 
-        ShowSongInfo(songs.get(0));
+        if(songs.size() > 0)
+            ShowSongInfo(songs.get(0));
 
         ShowFragment(songFragmentView, mainLayout);
         binding.showPlaylistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if(playlistListsFragmentView == null)
+                if(playlistListsFragmentView == null){
+
                     playlistListsFragmentView = inflater.inflate(R.layout.fragment_playlist_lists, mainLayout, false);
+                    FragmentPlaylistListsBinding playlistListviewBinding = FragmentPlaylistListsBinding.bind(playlistListsFragmentView);
+
+                    playlistListviewBinding.addPlaylistButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            Context context = getApplicationContext();
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                            builder.setTitle("Title");
+
+                            final EditText editTextName1 = new EditText(MainActivity.this);
+
+                            builder.setView(editTextName1);
+                            LinearLayout layoutName = new LinearLayout(MainActivity.this);
+                            layoutName.setOrientation(LinearLayout.VERTICAL);
+                            layoutName.addView(editTextName1); // displays the user input bar
+                            builder.setView(layoutName);
+
+                            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    playlistListviewBinding.textView.setText(editTextName1.getText().toString());
+                                }
+                            });
+                            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                            builder.show();
+                        }
+                    });
+                }
 
                 ShowFragment(playlistListsFragmentView, mainLayout);
             }
@@ -243,10 +288,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                currentSongIndex = i;
                 PlaySong(songs.get(i));
             }
         });
-
     }
 
     public void ShowFragment(View view, LinearLayout layout){

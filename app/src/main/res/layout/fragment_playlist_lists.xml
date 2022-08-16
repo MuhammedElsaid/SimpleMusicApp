@@ -25,7 +25,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
+            android:id="@+id/addPlaylistButton"
             style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             app:borderWidth="0dp"
             app:rippleColor="@color/gray"
