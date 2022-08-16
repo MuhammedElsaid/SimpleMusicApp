@@ -16,6 +16,11 @@ import java.io.IOException;
 public class Song {
 
     private int id;
+
+    public int getId() {
+        return id;
+    }
+
     private int duration;
     private String title;
     private String artist;

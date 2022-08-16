@@ -3,6 +3,7 @@ package com.tobi.simplemusicapp;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -53,6 +54,11 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
         return db.insert(MusicPlayFeedContract.MusicPlayerFeedEntry.TABLE_PLAYLIST,null, contentValues) == -1;
     }
 
+    public int getLastId(){
+
+        return (int)DatabaseUtils.longForQuery(getReadableDatabase(), "SELECT MAX("+ MusicPlayFeedContract.MusicPlayerFeedEntry._ID +") FROM " + MusicPlayFeedContract.MusicPlayerFeedEntry.TABLE_PLAYLIST, null);
+    }
+
     public boolean insertDataSong(String songID, String PlaylistID) {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -99,7 +105,7 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
         return songs;
     }
 
-    public ArrayList<Playlist> getPlaylists(){
+    public ArrayList<Playlist> getPlaylists(SimpleMediaPlayer simpleMediaPlayer){
 
         SQLiteDatabase db = this.getReadableDatabase();
         String[] Projection = {
@@ -123,10 +129,12 @@ public class MusicPlayerDBHelper extends SQLiteOpenHelper {
 
             int playlistID = cursor.getInt(cursor.getColumnIndexOrThrow(MusicPlayFeedContract.MusicPlayerFeedEntry._ID));
             String playlistName = cursor.getString(cursor.getColumnIndexOrThrow(MusicPlayFeedContract.MusicPlayerFeedEntry.COLUMN_PLAYLIST_NAME));
-            playLists.add(new Playlist(playlistName, playlistID));
+
+            playLists.add(new Playlist(getSongsFromPlaylist(simpleMediaPlayer, playlistID), playlistName, playlistID));
         }
 
         cursor.close();
+
 
         return playLists;
     }

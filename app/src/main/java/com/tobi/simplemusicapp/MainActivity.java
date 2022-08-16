@@ -11,7 +11,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.slider.Slider;
@@ -26,11 +28,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,8 +48,62 @@ public class MainActivity extends AppCompatActivity {
     private Handler mHandler;
 
     private SimpleMediaPlayer simpleMediaPlayer;
+    private MusicPlayerDBHelper musicPlayerDBHelper;
+
+    private Playlist currentPlaylist;
+    private Playlist allSongsPlaylist;
+
+    private ArrayList<Playlist> playlists;
+    private ArrayAdapter<String> playlistsAdapter;
 
     int currentSongIndex = 0;
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.addToPlaylist:{
+
+                AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+                ListView listview = PlaylistFragmentBinding.bind(songListFragmentView).songsList;
+
+                Song song = (Song)listview.getItemAtPosition(acmi.position);
+
+                ArrayList<String> playlistNames = new ArrayList<>();
+
+                playlists.forEach(playlist -> {
+                    playlistNames.add(playlist.getTitle());
+                });
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Pick a playlist");
+                builder.setItems(playlistNames.toArray(new String[playlistNames.size()]), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Playlist playlist = playlists.get(which);
+                        playlist.add(song);
+                        musicPlayerDBHelper.insertDataSong(String.valueOf(song.getId()), String.valueOf(playlist.getID()));
+                    }
+                });
+                builder.show();
+
+                break;
+            }
+
+        }
+
+        return super.onContextItemSelected(item);
+
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        getMenuInflater().inflate(R.menu.songs_list_menu, menu);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,54 +112,47 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        musicPlayerDBHelper = new MusicPlayerDBHelper(getApplicationContext(), "MusicPlayer", null, 1);
+
         //TODO:: temp
         simpleMediaPlayer = new SimpleMediaPlayer(this);
-        ArrayList<Song> songs = simpleMediaPlayer.getAllSongs();
+        allSongsPlaylist = simpleMediaPlayer.getAllSongs();
+        currentPlaylist = allSongsPlaylist;
 
-        binding.playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        binding.playButton.setOnClickListener(view -> {
 
-                if(simpleMediaPlayer.getRunningSong() == null){
-                    PlaySong(songs.get(0));
-                    binding.playButton.setImageResource(android.R.drawable.ic_media_pause);
-                    return;
-                }
-
-                if(simpleMediaPlayer.getMediaPlayer().isPlaying())
-                    simpleMediaPlayer.getMediaPlayer().pause();
-                else{
-                    simpleMediaPlayer.getMediaPlayer().start();
-                }
-
-                isPlaying = !isPlaying;
-
-                binding.playButton.setImageResource(isPlaying
-                        ? android.R.drawable.ic_media_pause
-                        : android.R.drawable.ic_media_play);
+            if(simpleMediaPlayer.getRunningSong() == null){
+                PlaySong(currentPlaylist.get(0));
+                binding.playButton.setImageResource(android.R.drawable.ic_media_pause);
+                return;
             }
+
+            if(simpleMediaPlayer.getMediaPlayer().isPlaying())
+                simpleMediaPlayer.getMediaPlayer().pause();
+            else
+                simpleMediaPlayer.getMediaPlayer().start();
+
+            isPlaying = !isPlaying;
+
+            binding.playButton.setImageResource(isPlaying
+                    ? android.R.drawable.ic_media_pause
+                    : android.R.drawable.ic_media_play);
         });
 
-        binding.nextSongButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        binding.nextSongButton.setOnClickListener(view -> {
 
-                if(currentSongIndex + 1 > songs.size() - 1)
-                    return;
+            if(currentSongIndex + 1 > currentPlaylist.size() - 1)
+                return;
 
-                PlayNextSong(songs.get(++currentSongIndex), false);
-            }
+            PlayNextSong(currentPlaylist.get(++currentSongIndex), false);
         });
 
-        binding.prevSongButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        binding.prevSongButton.setOnClickListener(view -> {
 
-                if(currentSongIndex - 1 < 0)
-                    return;
+            if(currentSongIndex - 1 < 0)
+                return;
 
-                PlayNextSong(songs.get(--currentSongIndex), true);
-            }
+            PlayNextSong(currentPlaylist.get(--currentSongIndex), true);
         });
 
         binding.timelineSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
@@ -135,94 +186,76 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout mainLayout = binding.fragmentHolder;
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if(songFragmentView == null)
-            songFragmentView = inflater.inflate(R.layout.songcover_fragment, mainLayout, false);
+        songFragmentView = inflater.inflate(R.layout.songcover_fragment, mainLayout, false);
+        playlistListsFragmentView = inflater.inflate(R.layout.fragment_playlist_lists, mainLayout, false);
+        songListFragmentView = inflater.inflate(R.layout.playlist_fragment, mainLayout, false);
 
-        if(songs.size() > 0)
-            ShowSongInfo(songs.get(0));
+        //Setting our playlistview
+        SetPlaylistView(allSongsPlaylist);
+
+        FragmentPlaylistListsBinding playlistListviewBinding = FragmentPlaylistListsBinding.bind(playlistListsFragmentView);
+
+        SetPlaylists();
+        playlistListviewBinding.playlistsList.setAdapter(playlistsAdapter);
+
+        playlistListviewBinding.playlistsList.setOnItemClickListener((adapterView, view12, i, l) -> {
+
+            currentPlaylist =  i == 0 ? allSongsPlaylist : playlists.get(i - 1);
+            SetPlaylistView(currentPlaylist);
+            ShowFragment(songListFragmentView, mainLayout);
+        });
+
+        playlistListviewBinding.addPlaylistButton.setOnClickListener(view1 -> {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Insert playlist name");
+
+            final EditText editTextName1 = new EditText(MainActivity.this);
+            editTextName1.setHint("Playlist name");
+
+            builder.setView(editTextName1);
+            LinearLayout layoutName = new LinearLayout(MainActivity.this);
+            layoutName.setOrientation(LinearLayout.VERTICAL);
+            layoutName.addView(editTextName1);
+            builder.setView(layoutName);
+
+            builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                dialog.dismiss();
+
+                String playlistName = editTextName1.getText().toString();
+                musicPlayerDBHelper.insertDataPlaylist(playlistName);
+
+                playlists.add(new Playlist( playlistName, musicPlayerDBHelper.getLastId()));
+                playlistsAdapter.add(playlistName);
+            });
+
+            builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
+            builder.show();
+        });
+
+        if(currentPlaylist.size() > 0)
+            ShowSongInfo(currentPlaylist.get(0));
 
         ShowFragment(songFragmentView, mainLayout);
-        binding.showPlaylistButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        binding.showPlaylistButton.setOnClickListener(view -> {
 
-                if(playlistListsFragmentView == null){
-
-                    playlistListsFragmentView = inflater.inflate(R.layout.fragment_playlist_lists, mainLayout, false);
-                    FragmentPlaylistListsBinding playlistListviewBinding = FragmentPlaylistListsBinding.bind(playlistListsFragmentView);
-
-                    playlistListviewBinding.addPlaylistButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            Context context = getApplicationContext();
-
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                            builder.setTitle("Title");
-
-                            final EditText editTextName1 = new EditText(MainActivity.this);
-
-                            builder.setView(editTextName1);
-                            LinearLayout layoutName = new LinearLayout(MainActivity.this);
-                            layoutName.setOrientation(LinearLayout.VERTICAL);
-                            layoutName.addView(editTextName1); // displays the user input bar
-                            builder.setView(layoutName);
-
-                            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    playlistListviewBinding.textView.setText(editTextName1.getText().toString());
-                                }
-                            });
-                            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
-
-                            builder.show();
-                        }
-                    });
-                }
-
-                ShowFragment(playlistListsFragmentView, mainLayout);
-            }
+            ShowFragment(playlistListsFragmentView, mainLayout);
         });
 
-        binding.showSongsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        binding.showSongsButton.setOnClickListener(view -> {
 
-                if(songListFragmentView == null){
-                    songListFragmentView = inflater.inflate(R.layout.playlist_fragment, mainLayout, false);
-
-                    SetAllSongsView(songs);
-                }
-
-                ShowFragment(songListFragmentView, mainLayout);
-            }
+            ShowFragment(songListFragmentView, mainLayout);
         });
 
-        binding.backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        binding.backButton.setOnClickListener(view -> ShowFragment(songFragmentView, mainLayout));
 
-                ShowFragment(songFragmentView, mainLayout);
-            }
-        });
-
-        simpleMediaPlayer.getMediaPlayer().setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                mediaPlayer.pause();
-                mediaPlayer.seekTo(0);
-                binding.timelineSlider.setValue(0);
-                binding.playButton.setImageResource(android.R.drawable.ic_media_play);
-                binding.currentPosText.setText("00:00");
-                isPlaying = false;
-            }
+        simpleMediaPlayer.getMediaPlayer().setOnCompletionListener(mediaPlayer -> {
+            mediaPlayer.pause();
+            mediaPlayer.seekTo(0);
+            binding.timelineSlider.setValue(0);
+            binding.playButton.setImageResource(android.R.drawable.ic_media_play);
+            binding.currentPosText.setText("00:00");
+            isPlaying = false;
         });
     }
 
@@ -276,22 +309,23 @@ public class MainActivity extends AppCompatActivity {
         PlaySong(song);
     }
 
-    public void SetAllSongsView(ArrayList<Song> songs){
+    public void SetPlaylistView(Playlist playlist){
 
         PlaylistFragmentBinding playlistFragmentBinding = PlaylistFragmentBinding.bind(songListFragmentView);
-
-        PlaylistAdapter adapter = new PlaylistAdapter(this, songs);
-
+        PlaylistAdapter adapter = new PlaylistAdapter(this, playlist);
         playlistFragmentBinding.songsList.setAdapter(adapter);
 
-        playlistFragmentBinding.songsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        registerForContextMenu(playlistFragmentBinding.songsList);
 
-                currentSongIndex = i;
-                PlaySong(songs.get(i));
-            }
+        playlistFragmentBinding.playlistName.setText(playlist.getTitle());
+        playlistFragmentBinding.numberOfSongsTxt.setText(String.valueOf(playlist.size()));
+        playlistFragmentBinding.songsList.setOnItemClickListener((adapterView, view, i, l) -> {
+
+            currentSongIndex = i;
+            PlaySong(playlist.get(i));
         });
+
+
     }
 
     public void ShowFragment(View view, LinearLayout layout){
@@ -317,5 +351,15 @@ public class MainActivity extends AppCompatActivity {
 
         //Animating the popup
         layout.animate().setDuration(250).translationY(0);
+    }
+
+    public void SetPlaylists(){
+
+        playlists = musicPlayerDBHelper.getPlaylists(simpleMediaPlayer);
+        playlistsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+
+        playlistsAdapter.add("All songs");
+
+        playlists.forEach(playlist -> playlistsAdapter.add(playlist.getTitle()));
     }
 }

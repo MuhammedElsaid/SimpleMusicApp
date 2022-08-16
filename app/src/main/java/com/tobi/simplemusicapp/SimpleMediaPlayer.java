@@ -132,7 +132,7 @@ public class SimpleMediaPlayer {
         return null;
     }
 
-    ArrayList<Song> getAllSongs(){
+    Playlist getAllSongs(){
 
         if(!checkPermissionForReadExternalStorage()){
             try {
@@ -179,7 +179,7 @@ public class SimpleMediaPlayer {
             while(cursor.moveToNext());
         }
 
-        return foundSongs;
+        return new Playlist(foundSongs, "All songs", -1);
     }
 
 }

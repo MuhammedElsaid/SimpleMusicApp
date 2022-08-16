@@ -12,6 +12,13 @@ public class Playlist extends ArrayList<Song> {
         this.ID = ID;
     }
 
+    public Playlist(ArrayList<Song> songs, String title, int ID) {
+
+        super(songs);
+        this.title = title;
+        this.ID = ID;
+    }
+
     public String getTitle() {
         return title;
     }
